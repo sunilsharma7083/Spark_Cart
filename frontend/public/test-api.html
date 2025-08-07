@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h1>Direct API Test</h1>
+    <div id="status">Loading...</div>
+    <div id="result"></div>
+    
+    <script>
+        console.log('Starting API test...');
+        
+        // Show environment info
+        document.getElementById('status').innerHTML = 'Testing API connection...';
+        
+        // Try direct fetch
+        fetch('http://localhost:5001/api/products')
+            .then(response => {
+                console.log('Response received:', response);
+                console.log('Status:', response.status);
+                console.log('Headers:', response.headers);
+                document.getElementById('status').innerHTML = `Response Status: ${response.status}`;
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data received:', data);
+                document.getElementById('result').innerHTML = `
+                    <h2>Success!</h2>
+                    <p>Products found: ${data.products ? data.products.length : 0}</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = `
+                    <h2>Error</h2>
+                    <p>${error.message}</p>
+                `;
+            });
+    </script>
+</body>
+</html>

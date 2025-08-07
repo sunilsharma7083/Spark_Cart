@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search API Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+</head>
+<body>
+    <h1>Search API Test</h1>
+    <button onclick="testSearch()">Test iPhone Search</button>
+    <div id="result"></div>
+
+    <script>
+        async function testSearch() {
+            try {
+                const response = await axios.get('http://localhost:5001/api/products?search=iphone');
+                console.log('API Response:', response.data);
+                document.getElementById('result').innerHTML = 
+                    '<h3>Success!</h3>' +
+                    '<p>Found ' + response.data.products.length + ' products</p>' +
+                    '<pre>' + JSON.stringify(response.data, null, 2) + '</pre>';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = 
+                    '<h3>Error!</h3>' +
+                    '<p>' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

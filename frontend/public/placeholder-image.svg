@@ -1,0 +1,6 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#f3f4f6"/>
+  <line x1="0" y1="0" x2="400" y2="400" stroke="#d1d5db" stroke-width="2"/>
+  <line x1="400" y1="0" x2="0" y2="400" stroke="#d1d5db" stroke-width="2"/>
+  <text x="200" y="200" text-anchor="middle" dominant-baseline="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="16">Image Not Available</text>
+</svg>

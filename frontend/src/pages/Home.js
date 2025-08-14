@@ -91,7 +91,7 @@ const Home = () => {
             className="text-center"
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Welcome to SpartkCart
+              Welcome to SparKCart
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-indigo-100">
               Discover amazing products at unbeatable prices

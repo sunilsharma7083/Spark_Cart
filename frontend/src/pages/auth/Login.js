@@ -194,7 +194,7 @@ const Login = () => {
                 type="button"
                 onClick={() => {
                   setFormData({
-                    email: 'admin@spartkart.com',
+                    email: 'admin@example.com',
                     password: 'admin123'
                   });
                 }}

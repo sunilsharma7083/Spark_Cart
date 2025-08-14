@@ -9,8 +9,11 @@ const Orders = () => {
   const { orders, loading, error } = useSelector((state) => state.orders);
 
   useEffect(() => {
+    console.log('Orders component mounted, fetching user orders...');
     dispatch(fetchUserOrders());
   }, [dispatch]);
+
+  console.log('Orders component state:', { orders, loading, error });
 
   if (loading) {
     return (
@@ -48,32 +51,35 @@ const Orders = () => {
                     <div className="flex justify-between items-center">
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Order #{order._id.slice(-8).toUpperCase()}
+                          Order #{order._id?.slice(-8)?.toUpperCase() || 'N/A'}
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Placed on {new Date(order.createdAt).toLocaleDateString('en-US', {
+                          Placed on {order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric'
-                          })}
+                          }) : 'Unknown date'}
                         </p>
                       </div>
                       <div className="text-right">
                         <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
-                          order.orderStatus === 'delivered'
+                          order.status === 'delivered'
                             ? 'bg-green-100 text-green-800'
-                            : order.orderStatus === 'shipped'
+                            : order.status === 'shipped'
                             ? 'bg-blue-100 text-blue-800'
-                            : order.orderStatus === 'processing'
+                            : order.status === 'processing'
                             ? 'bg-yellow-100 text-yellow-800'
-                            : order.orderStatus === 'cancelled'
+                            : order.status === 'cancelled'
                             ? 'bg-red-100 text-red-800'
                             : 'bg-gray-100 text-gray-800'
                         }`}>
-                          {order.orderStatus.charAt(0).toUpperCase() + order.orderStatus.slice(1)}
+                          {order.status ? 
+                            order.status.charAt(0).toUpperCase() + order.status.slice(1) :
+                            'Unknown'
+                          }
                         </span>
                         <p className="text-sm text-gray-600 mt-1">
-                          Total: <span className="font-semibold">${order.totalPrice.toFixed(2)}</span>
+                          Total: <span className="font-semibold">₹{order.totalAmount?.toFixed(2) || '0.00'}</span>
                         </p>
                       </div>
                     </div>
@@ -82,25 +88,30 @@ const Orders = () => {
                   {/* Order Items */}
                   <div className="px-6 py-4">
                     <div className="space-y-4">
-                      {order.orderItems.map((item) => (
-                        <div key={item._id} className="flex items-center space-x-4">
+                      {(order.items || order.orderItems || []).map((item, index) => (
+                        <div key={item._id || index} className="flex items-center space-x-4">
                           <img
-                            src={item.image}
-                            alt={item.name}
+                            src={item.productImage?.url || item.image || '/placeholder-image.svg'}
+                            alt={item.productName || item.name || 'Product'}
                             className="w-16 h-16 object-cover rounded-lg"
+                            onError={(e) => {
+                              e.target.src = '/placeholder-image.svg';
+                            }}
                           />
                           <div className="flex-1">
-                            <h4 className="font-medium text-gray-900">{item.name}</h4>
+                            <h4 className="font-medium text-gray-900">
+                              {item.productName || item.name || 'Unknown Product'}
+                            </h4>
                             <p className="text-sm text-gray-600">
-                              Quantity: {item.quantity}
+                              Quantity: {item.quantity || 1}
                             </p>
                             <p className="text-sm text-gray-600">
-                              Price: ${item.price.toFixed(2)} each
+                              Price: ₹{(item.unitPrice || item.price || 0).toFixed(2)} each
                             </p>
                           </div>
                           <div className="text-right">
                             <p className="font-semibold text-gray-900">
-                              ${(item.price * item.quantity).toFixed(2)}
+                              ₹{(item.totalPrice || ((item.unitPrice || item.price || 0) * (item.quantity || 1))).toFixed(2)}
                             </p>
                           </div>
                         </div>
@@ -139,12 +150,6 @@ const Orders = () => {
                           </button>
                         )}
                       </div>
-                      <Link
-                        to={`/orders/${order._id}`}
-                        className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
-                      >
-                        View Details
-                      </Link>
                     </div>
                   </div>
                 </div>

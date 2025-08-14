@@ -106,7 +106,7 @@ const Cart = () => {
                       <div className="flex-shrink-0">
                         <img
                           className="h-24 w-24 rounded-md object-cover object-center"
-                          src={item.product?.images?.[0] || '/placeholder-image.svg'}
+                          src={item.product?.images?.[0]?.url || '/placeholder-image.svg'}
                           alt={item.product?.name || 'Product'}
                           onError={(e) => {
                             e.target.src = '/placeholder-image.svg';
@@ -122,7 +122,7 @@ const Cart = () => {
                                 {item.product?.name || 'Unknown Product'}
                               </Link>
                             </h3>
-                            <p className="ml-4">${(item.product?.price || 0).toFixed(2)}</p>
+                            <p className="ml-4">₹{(item.product?.price || 0).toFixed(2)}</p>
                           </div>
                           {item.product?.brand && (
                             <p className="mt-1 text-sm text-gray-500">{item.product.brand}</p>
@@ -200,12 +200,12 @@ const Cart = () => {
             <div className="mt-6 space-y-4">
               <div className="flex items-center justify-between">
                 <p className="text-sm text-gray-600">Items ({totalItems})</p>
-                <p className="text-sm font-medium text-gray-900">${totalAmount.toFixed(2)}</p>
+                <p className="text-sm font-medium text-gray-900">₹{totalAmount.toFixed(2)}</p>
               </div>
 
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <p className="text-base font-medium text-gray-900">Order Total</p>
-                <p className="text-base font-medium text-gray-900">${totalAmount.toFixed(2)}</p>
+                <p className="text-base font-medium text-gray-900">₹{totalAmount.toFixed(2)}</p>
               </div>
             </div>
 

@@ -1,7 +1,7 @@
 {
-  "name": "ecommerce-frontend",
+  "name": "spartkart-frontend",
   "version": "1.0.0",
-  "description": "Complete E-commerce Frontend",
+  "description": "SparkCart E-commerce Frontend",
   "dependencies": {
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",

@@ -47,7 +47,7 @@ const Home = () => {
     {
       icon: TruckIcon,
       title: 'Free Shipping',
-      description: 'Free shipping on orders over $50'
+      description: 'Free shipping on orders over ₹4150'
     },
     {
       icon: ShieldCheckIcon,
@@ -103,7 +103,7 @@ const Home = () => {
             className="text-center"
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Welcome to ShopHub
+              Welcome to SparkCart
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-indigo-100">
               Discover amazing products at unbeatable prices
@@ -367,7 +367,7 @@ const Home = () => {
                 Call Us
               </a>
               <a
-                href="mailto:support@shophub.com"
+                href="mailto:support@spartkart.com"
                 className="inline-flex items-center px-6 py-3 border border-gray-300 text-white rounded-md hover:bg-gray-800 transition-colors"
               >
                 <EnvelopeIcon className="mr-2 h-5 w-5" />

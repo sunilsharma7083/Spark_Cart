@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
+import { motion } from "framer-motion";
+import { toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { addToCart } from "../../store/slices/cartSlice";
+import { addToWishlist, removeFromWishlist } from "../../store/slices/wishlistSlice";
+
 import { 
   HeartIcon as HeartOutline, 
   ShoppingCartIcon,
   StarIcon,
   EyeIcon
 } from '@heroicons/react/24/outline';
-import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
-import { addToCart } from '../../store/slices/cartSlice';
-import { addToWishlist, removeFromWishlist } from '../../store/slices/wishlistSlice';
-import { toast } from 'react-hot-toast';
 
 const ProductCard = ({ product }) => {
   const [isImageLoading, setIsImageLoading] = useState(true);
@@ -159,11 +160,11 @@ const ProductCard = ({ product }) => {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-2">
               <span className="text-xl font-bold text-gray-900">
-                ${product.price?.toFixed(2)}
+                ₹{product.price?.toFixed(2)}
               </span>
               {product.originalPrice && product.originalPrice > product.price && (
                 <span className="text-sm text-gray-500 line-through">
-                  ${product.originalPrice.toFixed(2)}
+                  ₹{product.originalPrice.toFixed(2)}
                 </span>
               )}
             </div>

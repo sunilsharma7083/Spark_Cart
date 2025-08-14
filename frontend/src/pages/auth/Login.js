@@ -69,7 +69,7 @@ const Login = () => {
       >
         <div>
           <Link to="/" className="flex justify-center">
-            <h1 className="text-3xl font-bold text-indigo-600">PTFO Store</h1>
+            <h1 className="text-3xl font-bold text-indigo-600">SparkCart</h1>
           </Link>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
@@ -194,7 +194,7 @@ const Login = () => {
                 type="button"
                 onClick={() => {
                   setFormData({
-                    email: 'admin@ptfostore.com',
+                    email: 'admin@spartkart.com',
                     password: 'admin123'
                   });
                 }}
@@ -206,7 +206,7 @@ const Login = () => {
                 type="button"
                 onClick={() => {
                   setFormData({
-                    email: 'user@ptfostore.com',
+                    email: 'user@spartkart.com',
                     password: 'user123'
                   });
                 }}

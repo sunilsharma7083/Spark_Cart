@@ -90,7 +90,7 @@ const Register = () => {
 
     try {
       await dispatch(register(userData)).unwrap();
-      toast.success('Account created successfully! Welcome to ShopHub!');
+      toast.success('Account created successfully! Welcome to SparkCart!');
     } catch (error) {
       // Error is handled by the useEffect above
     }
@@ -352,11 +352,11 @@ const Register = () => {
         <motion.div variants={itemVariants} className="mt-8">
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
-              Why join ShopHub?
+              Why join SparkCart?
             </h3>
             <div className="space-y-3">
               {[
-                'Free shipping on orders over $50',
+                'Free shipping on orders over ₹4150',
                 'Early access to sales and new products',
                 'Exclusive member-only discounts',
                 'Easy order tracking and returns',

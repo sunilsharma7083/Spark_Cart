@@ -10,11 +10,7 @@ import { fetchFeaturedProducts } from "../store/slices/productSlice";
 import { 
   ArrowRightIcon, 
   StarIcon,
-  TruckIcon,
-  ShieldCheckIcon,
-  GiftIcon,
   PhoneIcon,
-  ChatBubbleLeftRightIcon,
   EnvelopeIcon
 } from '@heroicons/react/24/outline';
 
@@ -22,6 +18,16 @@ const Home = () => {
   const dispatch = useDispatch();
   const { featuredProducts, loading, error } = useSelector((state) => state.products);
   const { categories = [] } = useSelector((state) => state.categories || {});
+
+  useEffect(() => {
+    dispatch(fetchFeaturedProducts());
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  // Add error boundary check
+  if (error) {
+    console.error('Home component error:', error);
+  }
 
   useEffect(() => {
     dispatch(fetchFeaturedProducts());
@@ -47,29 +53,6 @@ const Home = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
   };
-
-  const features = [
-    {
-      icon: TruckIcon,
-      title: 'Free Shipping',
-      description: 'Free shipping on orders over $50'
-    },
-    {
-      icon: ShieldCheckIcon,
-      title: 'Secure Payment',
-      description: 'Your payment information is secure'
-    },
-    {
-      icon: GiftIcon,
-      title: 'Gift Cards',
-      description: 'Perfect gift for your loved ones'
-    },
-    {
-      icon: ChatBubbleLeftRightIcon,
-      title: '24/7 Support',
-      description: 'Get help whenever you need it'
-    }
-  ];
 
   const testimonials = [
     {
@@ -108,7 +91,7 @@ const Home = () => {
             className="text-center"
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Welcome to ShopHub
+              Welcome to SpartkCart
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-indigo-100">
               Discover amazing products at unbeatable prices
@@ -132,33 +115,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-          >
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                className="text-center p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
-              >
-                <feature.icon className="h-12 w-12 text-indigo-600 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600">{feature.description}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
       {/* Categories Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -171,46 +127,48 @@ const Home = () => {
             </p>
           </div>
 
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6"
-          >
-            {categories.slice(0, 6).map((category) => (
-              <motion.div key={category._id} variants={itemVariants}>
-                <Link
-                  to={`/products?category=${category._id}`}
-                  className="group block bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
-                >
-                  <div className="aspect-square bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center group-hover:from-indigo-200 group-hover:to-purple-200 transition-colors">
-                    {category.image?.url ? (
-                      <img
-                        src={category.image.url}
-                        alt={category.name}
-                        className="w-16 h-16 object-cover rounded"
-                        onError={(e) => {
-                          e.target.src = '/placeholder-image.svg';
-                        }}
-                      />
-                    ) : (
-                      <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-xl">
-                          {category.name.charAt(0)}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-medium text-gray-900 text-center group-hover:text-indigo-600 transition-colors">
-                      {category.name}
-                    </h3>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
+          {loading ? (
+            <div className="text-center">Loading categories...</div>
+          ) : categories && categories.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {categories.slice(0, 4).map((category) => (
+                <div key={category._id}>
+                  <Link
+                    to={`/products?category=${category._id}`}
+                    className="group block bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
+                  >
+                    <div className="aspect-square bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center group-hover:from-indigo-200 group-hover:to-purple-200 transition-colors">
+                      {category.image?.url ? (
+                        <img
+                          src={category.image.url}
+                          alt={category.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            console.log('Image failed to load:', category.image.url);
+                            e.target.src = '/placeholder-image.svg';
+                          }}
+                          onLoad={() => console.log('Image loaded:', category.image.url)}
+                        />
+                      ) : (
+                        <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center">
+                          <span className="text-white font-bold text-xl">
+                            {category.name.charAt(0)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-medium text-gray-900 text-center group-hover:text-indigo-600 transition-colors">
+                        {category.name}
+                      </h3>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-red-500">No categories found</div>
+          )}
 
           <div className="text-center mt-8">
             <Link
@@ -265,38 +223,6 @@ const Home = () => {
               <ArrowRightIcon className="ml-2 h-5 w-5" />
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* Newsletter Section */}
-      <section className="py-16 bg-indigo-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Stay Updated
-            </h2>
-            <p className="text-xl text-indigo-100 mb-8">
-              Subscribe to our newsletter for exclusive deals and updates
-            </p>
-            <div className="max-w-md mx-auto">
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-4 py-3 rounded-l-md border-0 focus:ring-2 focus:ring-white focus:outline-none"
-                />
-                <button className="bg-white text-indigo-600 px-6 py-3 rounded-r-md font-semibold hover:bg-gray-100 transition-colors">
-                  Subscribe
-                </button>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </section>
 
@@ -375,7 +301,7 @@ const Home = () => {
                 Call Us
               </a>
               <a
-                href="mailto:support@shophub.com"
+                href="mailto:support@spartkart.com"
                 className="inline-flex items-center px-6 py-3 border border-gray-300 text-white rounded-md hover:bg-gray-800 transition-colors"
               >
                 <EnvelopeIcon className="mr-2 h-5 w-5" />

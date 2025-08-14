@@ -78,9 +78,12 @@ const Wishlist = () => {
                   <div className="relative">
                     <Link to={`/products/${item.product._id}`}>
                       <img
-                        src={item.product.images?.[0] || '/placeholder-image.jpg'}
+                        src={item.product.images?.[0]?.url || '/placeholder-image.svg'}
                         alt={item.product.name}
                         className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.target.src = '/placeholder-image.svg';
+                        }}
                       />
                     </Link>
                     <button
@@ -109,11 +112,11 @@ const Wishlist = () => {
                     <div className="mt-4 flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className="text-2xl font-bold text-gray-900">
-                          ${item.product.price}
+                          ₹{item.product.price}
                         </span>
                         {item.product.originalPrice && item.product.originalPrice > item.product.price && (
                           <span className="text-sm text-gray-500 line-through">
-                            ${item.product.originalPrice}
+                            ₹{item.product.originalPrice}
                           </span>
                         )}
                       </div>

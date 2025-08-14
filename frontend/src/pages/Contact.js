@@ -59,7 +59,7 @@ const Contact = () => {
     {
       icon: EnvelopeIcon,
       title: 'Email',
-      details: 'support@ptfostore.com',
+      details: 'support@spartkart.com',
       subtext: 'We reply within 24 hours'
     },
     {
@@ -279,11 +279,11 @@ const Contact = () => {
                     Call us: +1 (555) 123-4567
                   </a>
                   <a
-                    href="mailto:support@ptfostore.com"
+                    href="mailto:support@spartkart.com"
                     className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors"
                   >
                     <EnvelopeIcon className="h-5 w-5 mr-3" />
-                    Email: support@ptfostore.com
+                    Email: support@spartkart.com
                   </a>
                   <button
                     className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors w-full text-left"
@@ -343,7 +343,7 @@ const Contact = () => {
               Can't find what you're looking for?
             </p>
             <a
-              href="mailto:support@ptfostore.com"
+              href="mailto:support@spartkart.com"
               className="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
             >
               <EnvelopeIcon className="h-5 w-5 mr-2" />

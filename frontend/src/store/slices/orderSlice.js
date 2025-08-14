@@ -123,7 +123,7 @@ export const fetchUserOrders = createAsyncThunk(
   'orders/fetchUserOrders',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get('/orders/user/me');
+      const response = await api.get('/orders');
       return response.data;
     } catch (error) {
       return rejectWithValue(

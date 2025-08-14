@@ -62,11 +62,14 @@ const Products = () => {
     const searchParam = searchParams.get('search');
     const sortParam = searchParams.get('sort');
     
+    console.log('🔍 URL params useEffect:', { categoryParam, searchParam, sortParam });
+    
     if (categoryParam || searchParam || sortParam) {
       const newFilters = {};
       if (categoryParam) newFilters.category = categoryParam;
       if (searchParam) newFilters.search = searchParam;
       
+      console.log('✅ Setting URL-based filters:', newFilters);
       dispatch(setFilters(newFilters));
       if (sortParam) dispatch(setSortBy(sortParam));
       
@@ -87,38 +90,31 @@ const Products = () => {
 
   // Load products when filters change
   useEffect(() => {
-    console.log('Products useEffect triggered with filters:', filters, 'sortBy:', sortBy);
-    console.log('Current products length:', products.length);
+    console.log('🔄 Products useEffect triggered');
+    console.log('📊 Current filters:', filters);
+    console.log('🔀 Current sortBy:', sortBy);
+    console.log('📄 Current page:', currentPage);
     
-    // Simplified API call without Redux for testing
-    const testFetch = async () => {
-      try {
-        console.log('Making direct fetch call...');
-        const response = await fetch('http://localhost:5001/api/products', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        console.log('Direct fetch response:', response.status);
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Direct fetch success! Products:', data.products?.length);
-        }
-      } catch (error) {
-        console.error('Direct fetch error:', error);
-      }
-    };
+    // Don't fetch if we're still initializing and there are URL params to process
+    const categoryParam = searchParams.get('category');
+    const searchParam = searchParams.get('search');
     
-    testFetch();
+    // If URL has category but filters don't yet, wait for URL processing
+    if (categoryParam && !filters.category) {
+      console.log('⏳ Waiting for URL category filter to be processed...');
+      return;
+    }
     
-    // Also dispatch Redux action
-    dispatch(getProducts({ 
+    // Dispatch Redux action with proper parameters
+    const paramsToSend = { 
       page: currentPage,
       ...filters,
       sortBy 
-    }));
-  }, [dispatch, currentPage, filters, sortBy]);
+    };
+    console.log('📤 Sending API params:', paramsToSend);
+    
+    dispatch(getProducts(paramsToSend));
+  }, [dispatch, currentPage, filters, sortBy, searchParams]);
 
   const handleFilterChange = (filterType, value) => {
     const newFilters = { ...localFilters };
@@ -181,14 +177,27 @@ const Products = () => {
   };
 
   const clearAllFilters = () => {
+    // Check if we have a URL category parameter that should be preserved
+    const categoryParam = searchParams.get('category');
+    
+    console.log('🧹 clearAllFilters called, categoryParam:', categoryParam);
+    
     setLocalFilters({
-      categories: [],
+      categories: categoryParam ? [categoryParam] : [],
       priceRange: [0, 1000],
       rating: 0,
       inStock: false,
       onSale: false
     });
-    dispatch(clearFilters());
+    
+    // Only clear filters that are not from URL params
+    const filtersToKeep = {};
+    if (categoryParam) {
+      filtersToKeep.category = categoryParam;
+      console.log('🔒 Preserving URL category filter:', categoryParam);
+    }
+    
+    dispatch(setFilters(filtersToKeep));
   };
 
   const sortOptions = [
@@ -355,7 +364,7 @@ const Products = () => {
                   />
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>$0</span>
-                    <span>${localFilters.priceRange[1]}</span>
+                    <span>₹{localFilters.priceRange[1]}</span>
                   </div>
                 </div>
               </div>

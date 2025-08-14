@@ -20,7 +20,7 @@ const Footer = () => {
                 <TruckIcon className="h-12 w-12 text-indigo-400" />
               </div>
               <h3 className="text-lg font-semibold mb-2">Free Shipping</h3>
-              <p className="text-gray-400">Free shipping on orders over $100</p>
+              <p className="text-gray-400">Free shipping on orders over ₹8300</p>
             </div>
             
             <div className="text-center">
@@ -56,7 +56,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="col-span-1 md:col-span-1">
             <Link to="/" className="text-2xl font-bold text-indigo-400 mb-4 block">
-              PTFO Store
+              SparkCart
             </Link>
             <p className="text-gray-400 mb-4">
               Your one-stop destination for premium products. We offer the best selection 
@@ -209,7 +209,7 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-400 text-sm">
-              © 2024 PTFO Store. All rights reserved.
+              © 2024 SparkCart. All rights reserved.
             </div>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link to="/privacy" className="text-gray-400 hover:text-indigo-400 text-sm transition-colors">

@@ -6,7 +6,7 @@ export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
   async (params = {}, { rejectWithValue }) => {
     try {
-      console.log('fetchProducts called with params:', params);
+      console.log('🚀 fetchProducts called with params:', params);
       // Clean up params to handle arrays properly
       const cleanParams = { ...params };
       
@@ -25,9 +25,11 @@ export const fetchProducts = createAsyncThunk(
       });
       
       const queryString = new URLSearchParams(cleanParams).toString();
-      console.log('Making API call to:', `/products?${queryString}`);
+      console.log('🌐 Making API call to:', `/products?${queryString}`);
+      console.log('📋 Clean params sent to API:', cleanParams);
       const response = await api.get(`/products?${queryString}`);
-      console.log('API response:', response.data);
+      console.log('✅ API response products count:', response.data.products?.length);
+      console.log('📊 API response pagination:', response.data.pagination);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -160,10 +162,13 @@ const productSlice = createSlice({
       state.searchResults = [];
     },
     setFilters: (state, action) => {
+      console.log('🔧 setFilters called with:', action.payload);
+      console.log('🔧 Previous filters:', state.filters);
       state.filters = { ...state.filters, ...action.payload };
+      console.log('🔧 New filters:', state.filters);
     },
     setSortBy: (state, action) => {
-      state.filters.sortBy = action.payload;
+      state.sortBy = action.payload;
     },
     clearFilters: (state) => {
       state.filters = {

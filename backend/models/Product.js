@@ -233,12 +233,14 @@ productSchema.virtual('discountPercentage').get(function() {
 
 // Virtual for main image
 productSchema.virtual('mainImage').get(function() {
+  if (!this.images || !Array.isArray(this.images)) return null;
   const mainImage = this.images.find(img => img.isMain);
   return mainImage || this.images[0] || null;
 });
 
 // Virtual for stock status
 productSchema.virtual('stockStatus').get(function() {
+  if (!this.inventory) return 'in_stock';
   if (!this.inventory.trackQuantity) return 'in_stock';
   if (this.inventory.quantity <= 0) return 'out_of_stock';
   if (this.inventory.quantity <= this.inventory.lowStockThreshold) return 'low_stock';

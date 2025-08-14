@@ -1,14 +1,13 @@
-impoimport { fetchFeaturedProducts } from '../store/slices/productSlice';
-import { fetchCategories } from '../store/slices/categorySlice';
-import ProductCard from '../components/product/ProductCard';
-import LoadingSpinner from '../components/common/LoadingSpinner';eact, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { fetchFeaturedProducts } from '../../store/slices/productSlice';
-import { fetchMainCategories } from '../../store/slices/categorySlice';
-import ProductCard from '../product/ProductCard';
-import LoadingSpinner from '../common/LoadingSpinner';
+import LoadingSpinner from "../components/common/LoadingSpinner";
+import LoadingSpinner from "../common/LoadingSpinner";
+import ProductCard from "../components/product/ProductCard";
+import React, { useEffect } from "react";
+import { motion } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { fetchCategories } from "../store/slices/categorySlice";
+import { fetchFeaturedProducts } from "../store/slices/productSlice";
+
 import { 
   ArrowRightIcon, 
   StarIcon,
@@ -32,7 +31,7 @@ const Home = () => {
     {
       icon: TruckIcon,
       title: 'Free Shipping',
-      description: 'Free shipping on orders over $100'
+      description: 'Free shipping on orders over ₹8300'
     },
     {
       icon: ShieldCheckIcon,
@@ -59,7 +58,7 @@ const Home = () => {
             className="text-center"
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Welcome to PTFO Store
+              Welcome to SparkCart
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
               Discover amazing products at unbeatable prices. Your one-stop destination 

@@ -8,7 +8,7 @@ import { fetchUserOrders } from "../store/slices/orderSlice";
 const Profile = () => {
   const dispatch = useDispatch();
   const { user, loading } = useSelector((state) => state.auth);
-  const { orders } = useSelector((state) => state.orders);
+  const { orders, loading: ordersLoading, error: ordersError } = useSelector((state) => state.orders);
 
   const [activeTab, setActiveTab] = useState('profile');
   const [profileData, setProfileData] = useState({
@@ -30,8 +30,11 @@ const Profile = () => {
         phone: user.phone || ''
       });
     }
+    console.log('Profile component mounted, fetching user orders...');
     dispatch(fetchUserOrders());
   }, [user, dispatch]);
+
+  console.log('Profile component orders state:', { orders, loading: ordersLoading, error: ordersError });
 
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
@@ -235,42 +238,45 @@ const Profile = () => {
                       <div key={order._id} className="border border-gray-200 rounded-lg p-4">
                         <div className="flex justify-between items-start mb-4">
                           <div>
-                            <h3 className="font-semibold">Order #{order._id.slice(-8)}</h3>
+                            <h3 className="font-semibold">Order #{order._id?.slice(-8) || 'N/A'}</h3>
                             <p className="text-sm text-gray-600">
-                              Placed on {new Date(order.createdAt).toLocaleDateString()}
+                              Placed on {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'Unknown date'}
                             </p>
                           </div>
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            order.orderStatus === 'delivered'
+                            order.status === 'delivered'
                               ? 'bg-green-100 text-green-800'
-                              : order.orderStatus === 'shipped'
+                              : order.status === 'shipped'
                               ? 'bg-blue-100 text-blue-800'
-                              : order.orderStatus === 'processing'
+                              : order.status === 'processing'
                               ? 'bg-yellow-100 text-yellow-800'
                               : 'bg-gray-100 text-gray-800'
                           }`}>
-                            {order.orderStatus}
+                            {order.status || 'Unknown'}
                           </span>
                         </div>
                         <div className="space-y-2">
-                          {order.orderItems.map((item) => (
-                            <div key={item._id} className="flex items-center space-x-4">
+                          {(order.items || order.orderItems || []).map((item, index) => (
+                            <div key={item._id || index} className="flex items-center space-x-4">
                               <img
-                                src={item.image}
-                                alt={item.name}
+                                src={item.productImage?.url || item.image || '/placeholder-image.svg'}
+                                alt={item.productName || item.name || 'Product'}
                                 className="w-12 h-12 object-cover rounded"
+                                onError={(e) => {
+                                  e.target.src = '/placeholder-image.svg';
+                                }}
                               />
                               <div className="flex-1">
-                                <p className="font-medium">{item.name}</p>
+                                <p className="font-medium">{item.productName || item.name || 'Unknown Product'}</p>
                                 <p className="text-sm text-gray-600">
-                                  Quantity: {item.quantity} × ${item.price}
+                                  Quantity: {item.quantity || 1} × ₹{(item.unitPrice || item.price || 0).toFixed(2)}
                                 </p>
                               </div>
                             </div>
                           ))}
                         </div>
                         <div className="mt-4 pt-4 border-t">
-                          <p className="font-semibold">Total: ${order.totalPrice}</p>
+                          <p className="font-semibold">Total: ₹{(order.totalAmount || order.totalPrice || 0).toFixed(2)}</p>
                         </div>
                       </div>
                     ))

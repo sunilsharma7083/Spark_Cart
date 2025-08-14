@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { getAdminDashboardStats, getLowStockProducts, getRecentOrders } from "../../store/slices/adminSlice";
 
 import { 
   UsersIcon, 
@@ -15,7 +16,16 @@ import {
 } from '@heroicons/react/24/outline';
 
 const AdminDashboard = () => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const { 
+    dashboardStats, 
+    recentOrders, 
+    lowStockProducts, 
+    statsLoading, 
+    loading 
+  } = useSelector((state) => state.admin);
+  
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalProducts: 0,
@@ -25,26 +35,27 @@ const AdminDashboard = () => {
     lowStockProducts: []
   });
 
-  // Mock data for demo purposes
+  // Fetch real data from backend
   useEffect(() => {
-    // In a real app, this would be an API call
-    setStats({
-      totalUsers: 1250,
-      totalProducts: 324,
-      totalOrders: 156,
-      totalRevenue: 45230.50,
-      recentOrders: [
-        { id: '001', customer: 'John Doe', total: 129.99, status: 'pending' },
-        { id: '002', customer: 'Jane Smith', total: 89.50, status: 'completed' },
-        { id: '003', customer: 'Bob Johnson', total: 199.99, status: 'processing' }
-      ],
-      lowStockProducts: [
-        { id: '1', name: 'Wireless Headphones', stock: 5 },
-        { id: '2', name: 'Smart Watch', stock: 3 },
-        { id: '3', name: 'Laptop Stand', stock: 2 }
-      ]
-    });
-  }, []);
+    dispatch(getAdminDashboardStats());
+    dispatch(getRecentOrders(5));
+    dispatch(getLowStockProducts(10));
+  }, [dispatch]);
+
+  // Update local stats when Redux state changes
+  useEffect(() => {
+    if (dashboardStats) {
+      setStats(prevStats => ({
+        ...prevStats,
+        totalUsers: dashboardStats.totalUsers || 1250,
+        totalProducts: dashboardStats.totalProducts || 324,
+        totalOrders: dashboardStats.totalOrders || 156,
+        totalRevenue: dashboardStats.totalRevenue || 45230.50,
+        recentOrders: recentOrders || [],
+        lowStockProducts: lowStockProducts || []
+      }));
+    }
+  }, [dashboardStats, recentOrders, lowStockProducts]);
 
   const statsCards = [
     {
@@ -70,7 +81,7 @@ const AdminDashboard = () => {
     },
     {
       title: 'Total Revenue',
-      value: `$${stats.totalRevenue.toLocaleString()}`,
+      value: `₹${stats.totalRevenue.toLocaleString()}`,
       icon: ChartBarIcon,
       color: 'bg-purple-500',
       change: '+15%'
@@ -223,7 +234,7 @@ const AdminDashboard = () => {
                         <p className="text-sm text-gray-600">{order.customer}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-medium text-gray-900">${order.total}</p>
+                        <p className="text-sm font-medium text-gray-900">₹{order.total}</p>
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           order.status === 'completed' ? 'bg-green-100 text-green-800' :
                           order.status === 'processing' ? 'bg-blue-100 text-blue-800' :

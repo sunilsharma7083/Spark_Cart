@@ -1,7 +1,7 @@
 {
-  "name": "ecommerce-backend",
+  "name": "spartkart-backend",
   "version": "1.0.0",
-  "description": "Complete E-commerce Backend API",
+  "description": "SpartkCart E-commerce Backend API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

@@ -14,7 +14,7 @@ const About = () => {
     {
       icon: TruckIcon,
       title: 'Free Shipping',
-      description: 'Free shipping on all orders over $100. Fast and reliable delivery worldwide.'
+      description: 'Free shipping on all orders over ₹8300. Fast and reliable delivery worldwide.'
     },
     {
       icon: ShieldCheckIcon,
@@ -82,7 +82,7 @@ const About = () => {
             className="text-center"
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              About PTFO Store
+              About SparkCart
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
               Your trusted partner for premium quality products and exceptional shopping experience
@@ -105,7 +105,7 @@ const About = () => {
                 Our Story
               </h2>
               <p className="text-lg text-gray-600 mb-6">
-                Founded in 2020, PTFO Store started as a small family business with a simple mission: 
+                Founded in 2020, SparkCart started as a small family business with a simple mission: 
                 to provide high-quality products at affordable prices with exceptional customer service.
               </p>
               <p className="text-lg text-gray-600 mb-6">
@@ -191,7 +191,7 @@ const About = () => {
               Meet Our Team
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              The passionate people behind PTFO Store working to serve you better
+              The passionate people behind SparkCart working to serve you better
             </p>
           </motion.div>
 
@@ -320,7 +320,7 @@ const About = () => {
               Ready to Start Shopping?
             </h2>
             <p className="text-xl text-indigo-100 mb-8">
-              Discover our amazing collection of products and experience the PTFO difference
+              Discover our amazing collection of products and experience the SparkCart difference
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link

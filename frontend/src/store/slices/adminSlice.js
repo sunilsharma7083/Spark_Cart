@@ -6,7 +6,7 @@ export const fetchUserProfile = createAsyncThunk(
   'admin/fetchUserProfile',
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/api/users/${userId}`);
+      const response = await api.get(`/users/${userId}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -21,7 +21,7 @@ export const fetchAllUsers = createAsyncThunk(
   async (params = {}, { rejectWithValue }) => {
     try {
       const queryString = new URLSearchParams(params).toString();
-      const response = await api.get(`/api/users/admin/all?${queryString}`);
+      const response = await api.get(`/users/admin/all?${queryString}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -35,7 +35,7 @@ export const updateUserRole = createAsyncThunk(
   'admin/updateUserRole',
   async ({ userId, role }, { rejectWithValue }) => {
     try {
-      const response = await api.put(`/api/users/admin/${userId}/role`, { role });
+      const response = await api.put(`/users/admin/${userId}/role`, { role });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -49,7 +49,7 @@ export const deleteUser = createAsyncThunk(
   'admin/deleteUser',
   async (userId, { rejectWithValue }) => {
     try {
-      await api.delete(`/api/users/admin/${userId}`);
+      await api.delete(`/users/admin/${userId}`);
       return userId;
     } catch (error) {
       return rejectWithValue(
@@ -63,7 +63,7 @@ export const getDashboardStats = createAsyncThunk(
   'admin/getDashboardStats',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get('/api/users/admin/dashboard-stats');
+      const response = await api.get('/users/admin/dashboard-stats');
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -77,7 +77,7 @@ export const getRevenueStats = createAsyncThunk(
   'admin/getRevenueStats',
   async (period = '30d', { rejectWithValue }) => {
     try {
-      const response = await api.get(`/api/users/admin/revenue-stats?period=${period}`);
+      const response = await api.get(`/users/admin/revenue-stats?period=${period}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -91,7 +91,7 @@ export const getTopProducts = createAsyncThunk(
   'admin/getTopProducts',
   async (limit = 10, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/api/products/admin/top-products?limit=${limit}`);
+      const response = await api.get(`/products/admin/top-products?limit=${limit}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -105,7 +105,7 @@ export const getRecentOrders = createAsyncThunk(
   'admin/getRecentOrders',
   async (limit = 10, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/api/orders/admin/recent?limit=${limit}`);
+      const response = await api.get(`/orders/admin/recent?limit=${limit}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -115,11 +115,54 @@ export const getRecentOrders = createAsyncThunk(
   }
 );
 
+export const getAdminDashboardStats = createAsyncThunk(
+  'admin/getAdminDashboardStats',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get('/admin/dashboard/stats');
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to fetch dashboard stats'
+      );
+    }
+  }
+);
+
+export const fetchAllOrders = createAsyncThunk(
+  'admin/fetchAllOrders',
+  async (params = {}, { rejectWithValue }) => {
+    try {
+      const queryString = new URLSearchParams(params).toString();
+      const response = await api.get(`/orders/admin/all?${queryString}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to fetch orders'
+      );
+    }
+  }
+);
+
+export const updateOrderStatus = createAsyncThunk(
+  'admin/updateOrderStatus',
+  async ({ orderId, status }, { rejectWithValue }) => {
+    try {
+      const response = await api.patch(`/orders/admin/${orderId}/status`, { status });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to update order status'
+      );
+    }
+  }
+);
+
 export const getLowStockProducts = createAsyncThunk(
   'admin/getLowStockProducts',
   async (threshold = 10, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/api/products/admin/low-stock?threshold=${threshold}`);
+      const response = await api.get(`/products/admin/low-stock?threshold=${threshold}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -133,7 +176,7 @@ export const getUserAnalytics = createAsyncThunk(
   'admin/getUserAnalytics',
   async (period = '30d', { rejectWithValue }) => {
     try {
-      const response = await api.get(`/api/users/admin/analytics?period=${period}`);
+      const response = await api.get(`/users/admin/analytics?period=${period}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -174,6 +217,12 @@ const initialState = {
   // Product analytics
   topProducts: [],
   lowStockProducts: [],
+  
+  // Order management
+  orders: [],
+  selectedOrder: null,
+  ordersCurrentPage: 1,
+  ordersTotalPages: 0,
   
   // Order analytics
   recentOrders: [],
@@ -363,6 +412,54 @@ const adminSlice = createSlice({
       })
       .addCase(getUserAnalytics.rejected, (state, action) => {
         state.analyticsLoading = false;
+        state.error = action.payload;
+      })
+      
+      // Dashboard stats
+      .addCase(getAdminDashboardStats.pending, (state) => {
+        state.statsLoading = true;
+        state.error = null;
+      })
+      .addCase(getAdminDashboardStats.fulfilled, (state, action) => {
+        state.statsLoading = false;
+        state.dashboardStats = action.payload;
+      })
+      .addCase(getAdminDashboardStats.rejected, (state, action) => {
+        state.statsLoading = false;
+        state.error = action.payload;
+      })
+      
+      // All orders management
+      .addCase(fetchAllOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orders = action.payload.orders || action.payload;
+        state.ordersCurrentPage = action.payload.currentPage || 1;
+        state.ordersTotalPages = action.payload.totalPages || 1;
+      })
+      .addCase(fetchAllOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      
+      // Update order status
+      .addCase(updateOrderStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedOrder = action.payload;
+        const orderIndex = state.orders.findIndex(order => order._id === updatedOrder._id);
+        if (orderIndex !== -1) {
+          state.orders[orderIndex] = updatedOrder;
+        }
+      })
+      .addCase(updateOrderStatus.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload;
       });
   }

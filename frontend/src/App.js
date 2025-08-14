@@ -1,5 +1,6 @@
 import About from "./pages/About";
 import AdminDashboard from "./pages/admin/Dashboard";
+import AdminOrders from "./pages/admin/Orders";
 import AdminProducts from "./pages/admin/Products";
 import Cart from "./pages/Cart";
 import CartAuthSync from "./components/common/CartAuthSync";
@@ -9,6 +10,7 @@ import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import Layout from "./components/layout/Layout";
 import Login from "./pages/auth/Login";
+import OrderSuccess from "./pages/OrderSuccess";
 import Orders from "./pages/Orders";
 import ProductDetail from "./pages/ProductDetail";
 import Products from "./pages/Products";
@@ -17,7 +19,6 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import React, { useEffect } from "react";
 import Register from "./pages/auth/Register";
 import Search from "./pages/Search";
-import TestProducts from "./pages/TestProducts";
 import Wishlist from "./pages/Wishlist";
 import WishlistAuthSync from "./components/common/WishlistAuthSync";
 import { Toaster } from "react-hot-toast";
@@ -49,7 +50,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/products" element={<Products />} />
-          <Route path="/test-products" element={<TestProducts />} />
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/about" element={<About />} />
@@ -61,6 +61,11 @@ function App() {
           <Route path="/checkout" element={
             <ProtectedRoute>
               <Checkout />
+            </ProtectedRoute>
+          } />
+          <Route path="/order-success" element={
+            <ProtectedRoute>
+              <OrderSuccess />
             </ProtectedRoute>
           } />
           <Route path="/profile" element={
@@ -93,6 +98,11 @@ function App() {
           <Route path="/admin/products" element={
             <ProtectedRoute adminOnly={true}>
               <AdminProducts />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/orders" element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminOrders />
             </ProtectedRoute>
           } />
 
